@@ -18,7 +18,7 @@ public class ExecutionContextTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.executionContext = new ExecutionContext(FreeChoiceNetworkTest.buildNetWorkOne());
+		this.executionContext = new ExecutionContext(FreeChoiceNetworkTest.buildConcurrentNetWork());
 	}
 
 	@After

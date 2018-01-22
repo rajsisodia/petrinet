@@ -5,27 +5,15 @@ package org.sankhya.workflow.core.engine.petrinet;
 
 import org.sankhya.workflow.core.definition.Place;
 import org.sankhya.workflow.core.definition.Token;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Raj Singh Sisodia
- * @since Jun 13, 2017
+ * @since Jan 22, 2018
  *
  */
-public class LoggingTransition extends AbstractTransition {
+public class ParallelSplit extends AbstractTransition {
 
-	private final Logger logger = LoggerFactory.getLogger(LoggingTransition.class);
-	
-	private int id = 0;
-	
-	public LoggingTransition(int id) {
-		this.id = id;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see org.sankhya.workflow.core.definition.Transition#trigger()
 	 */
 	@Override
@@ -34,7 +22,6 @@ public class LoggingTransition extends AbstractTransition {
 			if (in.getTokenCount() > 0) {
 				Token token = in.getToken();
 				if (token != null) {
-					logger.debug("Logging token {} from Transition {}.", token,this.id);
 					if (getOutgoing().length > 0)
 						for (Place out : getOutgoing())
 							out.addToken(token);
