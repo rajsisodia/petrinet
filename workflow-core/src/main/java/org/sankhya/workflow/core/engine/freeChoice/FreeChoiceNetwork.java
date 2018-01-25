@@ -59,8 +59,8 @@ public class FreeChoiceNetwork implements Network {
 	 * transitions and n is the number of places in the network.
 	 * 
 	 * For each position [i,j] in the matrix, a value of 1 denotes an output
-	 * from transition i to position j. -1 denotes innput to the place j from i
-	 * and 0 denotesno connection between the two.
+	 * from transition i to position j. -1 denotes input to the place j from i
+	 * and 0 denotes no connection between the two.
 	 */
 	private int[][] transitionMatrix;
 

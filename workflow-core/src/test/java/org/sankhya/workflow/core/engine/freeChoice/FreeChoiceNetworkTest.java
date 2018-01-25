@@ -16,6 +16,7 @@ import org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork;
 import org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork.Builder;
 import org.sankhya.workflow.core.engine.petrinet.BoundPlace;
 import org.sankhya.workflow.core.engine.petrinet.ParallelSplit;
+import org.sankhya.workflow.core.engine.petrinet.SyncronizedJoin;
 import org.sankhya.workflow.core.engine.petrinet.LoggingTransition;
 import org.sankhya.workflow.core.engine.petrinet.Network;
 import org.sankhya.workflow.core.execution.petrinet.EmptyToken;
@@ -38,7 +39,7 @@ public class FreeChoiceNetworkTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.network = (FreeChoiceNetwork) buildNetWorkOne();
+		this.network = (FreeChoiceNetwork) buildConcurrentNetWork();
 	}
 
 	/* 
@@ -116,9 +117,23 @@ public class FreeChoiceNetworkTest {
 	 *		 |	   |	|
 	 *		 T4    T5	|
 	 *		 |	   |	|
+	 *		 P8    P9   |
+	 *		 |	   |	|
+	 *		 |	   T8	|
+	 *		 |	   |	|
+	 *		 |	   P10	|
+	 *		 |	   |	|
+	 *		 -------	|
+	 *			|		|
+	 *	(Sync) T7		|
+	 *			|		|
 	 *		 ----------T6
 	 *			   |
 	 *			   P7
+	 *			   |
+	 *			   T9
+	 *			   |
+	 *			   P11
 	 * 
 	 *  @formatter:on
 	 */
@@ -136,6 +151,10 @@ public class FreeChoiceNetworkTest {
 		builder.addPlace(new BoundPlace(1), 5);
 		builder.addPlace(new BoundPlace(1), 6);
 		builder.addPlace(new BoundPlace(1), 7);
+		builder.addPlace(new BoundPlace(1), 8);
+		builder.addPlace(new BoundPlace(1), 9);
+		builder.addPlace(new BoundPlace(1), 10);
+		builder.addPlace(new BoundPlace(1), 11);
 		
 		builder.addTransition(new ParallelSplit(), 0);
 		builder.addTransition(new LoggingTransition(1), 1);
@@ -144,6 +163,9 @@ public class FreeChoiceNetworkTest {
 		builder.addTransition(new LoggingTransition(4), 4);
 		builder.addTransition(new LoggingTransition(5), 5);
 		builder.addTransition(new LoggingTransition(6), 6);
+		builder.addTransition(new SyncronizedJoin(), 7);
+		builder.addTransition(new LoggingTransition(8), 8);
+		builder.addTransition(new LoggingTransition(9), 9);
 		
 		builder.addConnection(0, 0, true);
 		builder.addConnection(1, 1, true);
@@ -152,6 +174,11 @@ public class FreeChoiceNetworkTest {
 		builder.addConnection(4, 5, true);
 		builder.addConnection(5, 6, true);
 		builder.addConnection(6, 4, true);
+		builder.addConnection(7, 8, true);
+		builder.addConnection(7, 10, true);
+		builder.addConnection(8, 9, true);
+		builder.addConnection(9, 7, true);
+
 		
 		builder.addConnection(0, 1, false);
 		builder.addConnection(0, 2, false);
@@ -159,9 +186,11 @@ public class FreeChoiceNetworkTest {
 		builder.addConnection(2, 4, false);
 		builder.addConnection(3, 5, false);
 		builder.addConnection(3, 6, false);
-		builder.addConnection(4, 7, false);
-		builder.addConnection(5, 7, false);
-		builder.addConnection(6, 7, false);
+		builder.addConnection(4, 8, false);
+		builder.addConnection(5, 9, false);
+		builder.addConnection(7, 7, false);
+		builder.addConnection(8, 10, false);
+		builder.addConnection(9, 11, false);
 
 		return builder.build("Concurrent", "1.0");
 	}
