@@ -87,5 +87,11 @@ public interface Network {
 	 * @return Array if all the transactions in the network.
 	 */
 	Transition[] getAllTransitions();
+	
+	/**
+	 * Provides thenumber of places in the network.
+	 * @return int, denoting the number of places in the network,should always be greater than 1. 
+	 */
+	int getPlaceCount();
 
 }

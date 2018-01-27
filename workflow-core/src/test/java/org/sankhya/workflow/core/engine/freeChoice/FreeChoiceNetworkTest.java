@@ -11,15 +11,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.sankhya.workflow.core.definition.Place;
-import org.sankhya.workflow.core.definition.Token;
 import org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork;
 import org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork.Builder;
 import org.sankhya.workflow.core.engine.petrinet.BoundPlace;
+import org.sankhya.workflow.core.engine.petrinet.EndPlace;
 import org.sankhya.workflow.core.engine.petrinet.ParallelSplit;
 import org.sankhya.workflow.core.engine.petrinet.SyncronizedJoin;
 import org.sankhya.workflow.core.engine.petrinet.LoggingTransition;
 import org.sankhya.workflow.core.engine.petrinet.Network;
-import org.sankhya.workflow.core.execution.petrinet.EmptyToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,12 +66,11 @@ public class FreeChoiceNetworkTest {
 		Builder builder = new Builder();
 		
 		Place start = new BoundPlace(1);
-		start.addToken(new EmptyToken());
 		
 		builder.addPlace(start, 0);
 		builder.addPlace(new BoundPlace(1), 1);
 		builder.addPlace(new BoundPlace(1), 2);
-		builder.addPlace(new BoundPlace(1), 3);
+		builder.addPlace(new EndPlace(1), 3);
 		
 		builder.addTransition(new LoggingTransition(0), 0);
 		builder.addTransition(new LoggingTransition(1), 1);
@@ -140,30 +138,29 @@ public class FreeChoiceNetworkTest {
 	public static Network buildConcurrentNetWork() {
 		Builder builder = new Builder();
 		
-		Place start = new BoundPlace(1);
-		start.addToken(new EmptyToken());
+		Place start = new BoundPlace(0);
 		
 		builder.addPlace(start, 0);
 		builder.addPlace(new BoundPlace(1), 1);
-		builder.addPlace(new BoundPlace(1), 2);
-		builder.addPlace(new BoundPlace(1), 3);
-		builder.addPlace(new BoundPlace(1), 4);
-		builder.addPlace(new BoundPlace(1), 5);
-		builder.addPlace(new BoundPlace(1), 6);
-		builder.addPlace(new BoundPlace(1), 7);
-		builder.addPlace(new BoundPlace(1), 8);
-		builder.addPlace(new BoundPlace(1), 9);
-		builder.addPlace(new BoundPlace(1), 10);
-		builder.addPlace(new BoundPlace(1), 11);
+		builder.addPlace(new BoundPlace(2), 2);
+		builder.addPlace(new BoundPlace(3), 3);
+		builder.addPlace(new BoundPlace(4), 4);
+		builder.addPlace(new BoundPlace(5), 5);
+		builder.addPlace(new BoundPlace(6), 6);
+		builder.addPlace(new BoundPlace(7), 7);
+		builder.addPlace(new BoundPlace(8), 8);
+		builder.addPlace(new BoundPlace(9), 9);
+		builder.addPlace(new BoundPlace(10), 10);
+		builder.addPlace(new EndPlace(11), 11);
 		
-		builder.addTransition(new ParallelSplit(), 0);
+		builder.addTransition(new ParallelSplit(0), 0);
 		builder.addTransition(new LoggingTransition(1), 1);
 		builder.addTransition(new LoggingTransition(2), 2);
-		builder.addTransition(new ParallelSplit(), 3);
+		builder.addTransition(new ParallelSplit(3), 3);
 		builder.addTransition(new LoggingTransition(4), 4);
 		builder.addTransition(new LoggingTransition(5), 5);
 		builder.addTransition(new LoggingTransition(6), 6);
-		builder.addTransition(new SyncronizedJoin(), 7);
+		builder.addTransition(new SyncronizedJoin(7), 7);
 		builder.addTransition(new LoggingTransition(8), 8);
 		builder.addTransition(new LoggingTransition(9), 9);
 		
@@ -188,6 +185,7 @@ public class FreeChoiceNetworkTest {
 		builder.addConnection(3, 6, false);
 		builder.addConnection(4, 8, false);
 		builder.addConnection(5, 9, false);
+		builder.addConnection(6, 7, false);
 		builder.addConnection(7, 7, false);
 		builder.addConnection(8, 10, false);
 		builder.addConnection(9, 11, false);

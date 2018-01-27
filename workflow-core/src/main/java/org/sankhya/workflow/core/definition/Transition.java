@@ -3,6 +3,8 @@
  */
 package org.sankhya.workflow.core.definition;
 
+import org.sankhya.workflow.core.execution.petrinet.ExecutionContext;
+
 /**
  * A transition changes the state of execution of the graph, in other words,
  * actions happen at the Transition. When the preconditions for the Transition,
@@ -19,6 +21,11 @@ package org.sankhya.workflow.core.definition;
  *
  */
 public interface Transition {
+	
+	/**
+	 * @return the ID associated with this place.
+	 */
+	int getId();
 
 	/**
 	 * Triggers the Transition and consumes tokens from the in-bound
@@ -26,13 +33,13 @@ public interface Transition {
 	 * {@link Token tokens}, if any, would be places into out-bound places.
 	 * 
 	 */
-	void trigger();
+	void trigger(ExecutionContext context);
 
 	/**
 	 * Checks if the precondition to trigger the Transition are satisfied or not.
 	 * @return <code>true</code> if the Transition can be triggered, otherwise <code>false</code>.
 	 */
-	boolean isTrigger();
+	boolean isTrigger(ExecutionContext context);
 	
 	/**
 	 * Sets the {@link Place places} which are connected to this transition through in-bound arc.

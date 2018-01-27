@@ -5,6 +5,7 @@ package org.sankhya.workflow.core.engine.petrinet;
 
 import org.sankhya.workflow.core.definition.Place;
 import org.sankhya.workflow.core.definition.Transition;
+import org.sankhya.workflow.core.execution.petrinet.ExecutionContext;
 
 /**
  * @author Raj Singh Sisodia
@@ -20,9 +21,9 @@ public abstract class AbstractTransition implements Transition {
 	 * The {@link Transition} can trigger when any of the incoming {@link Place} holds a token.
 	 */
 	@Override
-	public boolean isTrigger() {
+	public boolean isTrigger(ExecutionContext context) {
 		for(Place in : incoming){
-			if(in.getTokenCount() > 0) return true;
+			if(context.exists(in.getId()) != -1) return true;
 		}
 		return false;
 	}

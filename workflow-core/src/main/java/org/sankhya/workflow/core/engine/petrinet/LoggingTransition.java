@@ -4,7 +4,7 @@
 package org.sankhya.workflow.core.engine.petrinet;
 
 import org.sankhya.workflow.core.definition.Place;
-import org.sankhya.workflow.core.definition.Token;
+import org.sankhya.workflow.core.execution.petrinet.ExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LoggingTransition extends AbstractTransition {
 
-	private final Logger logger = LoggerFactory.getLogger(LoggingTransition.class);
+	private final static Logger logger = LoggerFactory.getLogger(LoggingTransition.class);
 	
 	private int id = 0;
 	
@@ -29,19 +29,23 @@ public class LoggingTransition extends AbstractTransition {
 	 * @see org.sankhya.workflow.core.definition.Transition#trigger()
 	 */
 	@Override
-	public void trigger() {
+	public void trigger(ExecutionContext context) {
 		for (Place in : getIncoming()) {
-			if (in.getTokenCount() > 0) {
-				Token token = in.getToken();
-				if (token != null) {
-					logger.debug("Logging token {} from Transition {}.", token,this.id);
-					if (getOutgoing().length > 0)
-						for (Place out : getOutgoing())
-							out.addToken(token);
-				}
+			if(context.exists(in.getId()) != -1){
+				context.popToken(in.getId());
+				logger.debug("Logging from Transition {}.", this.id);
+				if (getOutgoing().length > 0)
+					for (Place out : getOutgoing())
+						context.pushToken(out.getId());
 			}
+			
 		}
 
+	}
+
+	@Override
+	public int getId() {
+		return id;
 	}
 
 }

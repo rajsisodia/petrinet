@@ -117,6 +117,11 @@ public class FreeChoiceNetwork implements Network {
 		return transitions;
 	}
 
+	@Override
+	public int getPlaceCount() {
+		return places.length;
+	}
+	
 	/**
 	 * Privileged Builder class to create an instance of the Network and set the
 	 * necessary parameters.
@@ -177,8 +182,10 @@ public class FreeChoiceNetwork implements Network {
 			for(int i=0;i<transitionInputs.length;i++){
 				List<Place> incomingPlaces = new ArrayList<>();
 				for(int j=0;j<transitionInputs[0].length;j++){
-					if(transitionInputs[i][j] == 1)
+					if(transitionInputs[i][j] == 1){
 						incomingPlaces.add(places[j]);
+						places[j].addTransition(transitions[i]);
+					}
 				}
 				transitions[i].setIncomingPlaces(incomingPlaces.toArray(new Place[] {}));
 			}
@@ -284,4 +291,6 @@ public class FreeChoiceNetwork implements Network {
 		}
 
 	}
+
+
 }

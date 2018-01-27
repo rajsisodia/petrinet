@@ -27,6 +27,11 @@ import org.springframework.messaging.Message;
  *
  */
 public interface Place extends Serializable {
+	
+	/**
+	 * @return the ID associated with this place.
+	 */
+	int getId();
 
 	/**
 	 * Returns weather the place already contains the maximum number of tokens.
@@ -37,77 +42,13 @@ public interface Place extends Serializable {
 	boolean isFullCapacity();
 
 	/**
-	 * Provides the list of all {@link Token Tokens} available at the Place at
-	 * the time of request.
-	 * 
-	 * @return List of tokens at the place, an empty List if the Place has no
-	 *         tokens. Never <code>null</code>.
-	 */
-	List<Token> getTokens();
-
-	/**
-	 * Provides the list of {@link Token Tokens} available at the Place at the
-	 * time of request. The number of tokens returned will either be requested
-	 * count or all tokens, whichever is lower. The order of tokens is
-	 * non-determinant.
-	 * 
-	 * @param count
-	 *            number of tokens which needs to be provided.
-	 * @return List of requested number tokens at the place, an empty List if
-	 *         the Place has no tokens. Never <code>null</code>.
-	 */
-	List<Token> getTokens(int count);
-
-	/**
-	 * Convenience method for {@link #getTokens(int)} with <b>count</b> equals
-	 * to <b>1</b>.
-	 * 
-	 * @return One token at the place, <code>null</code> if
-	 *         the Place has no tokens.
-	 */
-	Token getToken();
-
-	/**
-	 * Adds a {@link Token} to the Place. This is a blocking call, whenever
-	 * there is an overflow of the capacity the call will be blocked until the
-	 * buffer is available.
-	 * 
-	 * @param token
-	 *            the {@link Token} to be added to the Place.
-	 */
-	void addToken(Token token);
-
-	/**
-	 * Adds a {@link Token} to the Place. This call will be blocked whenever
-	 * there is an overflow of capacity, until the Place buffer is available
-	 * again, or timeout has occurred, whichever is earlier.
-	 * 
-	 * @param token
-	 *            the {@link Token} to be added to the Place.
-	 * @param timeout
-	 *            time in milliseconds to wait for the Place buffer to be
-	 *            available.
-	 * @throws TimeoutException
-	 *             if the timeout occurs before the buffer is available.
-	 */
-	void addToken(Token token, long timeout) throws TimeoutException;
-
-	/**
-	 * Removes the specified {@link Token} from the Place buffer.
-	 * 
-	 * @param token
-	 *            token to be removed.
-	 * @return List of available tokens at the place after the removal, an empty
-	 *         List if the Place has no tokens. Never <code>null</code>.
-	 * @throws IllegalStateException
-	 *             if the token is not available.
-	 */
-	List<Token> removeToken(Token token) throws IllegalStateException;
-	
-	/**
 	 * 
 	 * @return The number of tokens currently held at the Place. <code>0</code> when the place is empty;
 	 */
 	int getTokenCount();
+	
+	Transition[] getOutgoingTransitions();
+	
+	void addTransition(Transition transition);
 	
 }
