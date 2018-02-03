@@ -65,12 +65,12 @@ public class FreeChoiceNetworkTest {
 	public static Network buildNetWorkOne() {
 		Builder builder = new Builder();
 		
-		Place start = new BoundPlace(1);
+		Place start = new BoundPlace(0);
 		
 		builder.addPlace(start, 0);
 		builder.addPlace(new BoundPlace(1), 1);
-		builder.addPlace(new BoundPlace(1), 2);
-		builder.addPlace(new EndPlace(1), 3);
+		builder.addPlace(new BoundPlace(2), 2);
+		builder.addPlace(new EndPlace(3), 3);
 		
 		builder.addTransition(new LoggingTransition(0), 0);
 		builder.addTransition(new LoggingTransition(1), 1);

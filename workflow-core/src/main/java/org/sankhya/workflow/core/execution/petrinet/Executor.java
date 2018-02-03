@@ -3,9 +3,6 @@
  */
 package org.sankhya.workflow.core.execution.petrinet;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.sankhya.workflow.core.definition.Place;
 import org.sankhya.workflow.core.definition.Transition;
 import org.sankhya.workflow.core.engine.petrinet.EndPlace;
