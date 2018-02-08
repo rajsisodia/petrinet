@@ -10,11 +10,8 @@ import org.sankhya.workflow.core.petrinet.NetworkBuilder;
 import org.sankhya.workflow.core.petrinet.Place;
 import org.sankhya.workflow.core.petrinet.Transition;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class BaseNetworkBuilder implements NetworkBuilder {
-
-	private final static Logger logger = LoggerFactory.getLogger(BaseNetworkBuilder.class);
 
 	private Map<String, Transition> transitions = new HashMap<>();
 	private Map<String, Place> places = new HashMap<>();
@@ -51,7 +48,7 @@ public abstract class BaseNetworkBuilder implements NetworkBuilder {
 			if (node.getId() < 0)
 				node.setId(transitionCounter);
 			transitions.put(node.getName(), (Transition) node);
-			logger.trace("Added Transition [{}] with id [{}] to network", node.getName(), node.getId());
+			getLogger().trace("Added Transition [{}] with id [{}] to network", node.getName(), node.getId());
 
 			transitionCounter++;
 
@@ -59,7 +56,7 @@ public abstract class BaseNetworkBuilder implements NetworkBuilder {
 			if (node.getId() < 0)
 				node.setId(placeCounter);
 			places.put(node.getName(), (Place) node);
-			logger.trace("Added Place [{}] with id [{}] to network", node.getName(), node.getId());
+			getLogger().trace("Added Place [{}] with id [{}] to network", node.getName(), node.getId());
 
 			placeCounter++;
 		} else {
@@ -112,7 +109,7 @@ public abstract class BaseNetworkBuilder implements NetworkBuilder {
 			((AbstractNode<Node<?>>) from).setOutgoing((Transition) to);
 			((AbstractNode<Node<?>>) to).setIncoming((Place) from);
 
-			logger.trace("Connecting Place [{}]:[{}] with Transition [{}]:[{}]", from.getName(), from.getId(),
+			getLogger().trace("Connecting Place [{}]:[{}] with Transition [{}]:[{}]", from.getName(), from.getId(),
 					to.getName(), to.getId());
 
 		} else {
@@ -134,7 +131,7 @@ public abstract class BaseNetworkBuilder implements NetworkBuilder {
 			((AbstractNode<Node<?>>) from).setOutgoing((Place) to);
 			((AbstractNode<Node<?>>) to).setIncoming((Transition) from);
 
-			logger.trace("Connecting Transition [{}]:[{}] with place [{}]:[{}]", from.getName(), from.getId(),
+			getLogger().trace("Connecting Transition [{}]:[{}] with place [{}]:[{}]", from.getName(), from.getId(),
 					to.getName(), to.getId());
 		}
 
@@ -168,7 +165,7 @@ public abstract class BaseNetworkBuilder implements NetworkBuilder {
 		int iNew = (iLen > i) ? iLen : i + 1;
 		int jNew = (jLen > j) ? jLen : j + 1;
 
-		logger.trace("Resizing transition matrix to i : {} & j : {}", iNew, jNew);
+		getLogger().trace("Resizing transition matrix to i : {} & j : {}", iNew, jNew);
 
 		int[][] newMatrix = new int[iNew][jNew];
 
@@ -192,4 +189,5 @@ public abstract class BaseNetworkBuilder implements NetworkBuilder {
 		return result;
 	}
 
+	protected abstract Logger getLogger();
 }

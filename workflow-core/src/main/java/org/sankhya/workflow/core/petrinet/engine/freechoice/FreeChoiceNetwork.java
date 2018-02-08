@@ -12,6 +12,8 @@ import org.sankhya.workflow.core.definition.Node;
 import org.sankhya.workflow.core.petrinet.Network;
 import org.sankhya.workflow.core.petrinet.Place;
 import org.sankhya.workflow.core.petrinet.Transition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A free choice network is modeled as a bipartite graph, consisting of
@@ -122,6 +124,7 @@ public class FreeChoiceNetwork implements Network {
 
 	public static class Builder extends BaseNetworkBuilder {
 
+		private final Logger logger = LoggerFactory.getLogger(Builder.class);
 		@Override
 		public Network build(String name, String version) {
 
@@ -140,6 +143,10 @@ public class FreeChoiceNetwork implements Network {
 			network.transitionMatrix = getTransitionMatrix();
 
 			return network;
+		}
+		@Override
+		protected Logger getLogger() {
+			return logger;
 		}
 
 	}
