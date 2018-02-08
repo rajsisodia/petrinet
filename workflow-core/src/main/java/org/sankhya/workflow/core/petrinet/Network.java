@@ -1,10 +1,8 @@
 /**
  * 
  */
-package org.sankhya.workflow.core.engine.petrinet;
+package org.sankhya.workflow.core.petrinet;
 
-import org.sankhya.workflow.core.definition.Place;
-import org.sankhya.workflow.core.definition.Transition;
 import org.sankhya.workflow.core.IllegalStateException;
 
 /**

@@ -3,8 +3,8 @@
  */
 package org.sankhya.workflow.core.engine.petrinet;
 
-import org.sankhya.workflow.core.definition.Place;
 import org.sankhya.workflow.core.execution.petrinet.ExecutionContext;
+import org.sankhya.workflow.core.petrinet.Place;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,18 +17,10 @@ public class SyncronizedJoin extends AbstractTransition {
 	
 	private final static Logger logger = LoggerFactory.getLogger(SyncronizedJoin.class);
 
-	private int id;
-
-	public SyncronizedJoin(int id) {
-		this.id = id;
+	public SyncronizedJoin(String name) {
+		super(name);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.sankhya.workflow.core.engine.petrinet.AbstractTransition#isTrigger()
-	 */
 	@Override
 	public boolean isTrigger(ExecutionContext context) {
 		boolean shouldTrigger = true;
@@ -38,11 +30,6 @@ public class SyncronizedJoin extends AbstractTransition {
 		return shouldTrigger;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.sankhya.workflow.core.definition.Transition#trigger()
-	 */
 	@Override
 	public void trigger(ExecutionContext context) {
 		for (Place in : getIncoming()) {
@@ -51,13 +38,9 @@ public class SyncronizedJoin extends AbstractTransition {
 				return;
 			context.popToken(in.getId());
 		}
-		logger.trace("Joining tokens at Transition {}.", this.id);
+		logger.trace("Joining tokens at Transition {}.", getId());
 		context.pushToken(getOutgoing()[0].getId());
 	}
 
-	@Override
-	public int getId() {
-		return id;
-	}
 
 }

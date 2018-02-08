@@ -10,15 +10,15 @@ import java.util.Arrays;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.sankhya.workflow.core.definition.Place;
 import org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork;
 import org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork.Builder;
 import org.sankhya.workflow.core.engine.petrinet.BoundPlace;
 import org.sankhya.workflow.core.engine.petrinet.EndPlace;
 import org.sankhya.workflow.core.engine.petrinet.ParallelSplit;
 import org.sankhya.workflow.core.engine.petrinet.SyncronizedJoin;
+import org.sankhya.workflow.core.petrinet.Network;
+import org.sankhya.workflow.core.petrinet.Place;
 import org.sankhya.workflow.core.engine.petrinet.LoggingTransition;
-import org.sankhya.workflow.core.engine.petrinet.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

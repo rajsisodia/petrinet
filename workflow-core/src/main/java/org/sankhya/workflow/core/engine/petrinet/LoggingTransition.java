@@ -3,8 +3,8 @@
  */
 package org.sankhya.workflow.core.engine.petrinet;
 
-import org.sankhya.workflow.core.definition.Place;
 import org.sankhya.workflow.core.execution.petrinet.ExecutionContext;
+import org.sankhya.workflow.core.petrinet.Place;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,11 +16,9 @@ import org.slf4j.LoggerFactory;
 public class LoggingTransition extends AbstractTransition {
 
 	private final static Logger logger = LoggerFactory.getLogger(LoggingTransition.class);
-	
-	private int id = 0;
-	
-	public LoggingTransition(int id) {
-		this.id = id;
+
+	public LoggingTransition(String name) {
+		super(name);
 	}
 
 	/*
@@ -31,21 +29,17 @@ public class LoggingTransition extends AbstractTransition {
 	@Override
 	public void trigger(ExecutionContext context) {
 		for (Place in : getIncoming()) {
-			if(context.exists(in.getId()) != -1){
+			if (context.exists(in.getId()) != -1) {
 				context.popToken(in.getId());
-				logger.debug("Logging from Transition {}.", this.id);
+				logger.debug("Logging from Transition {}.", getId());
 				if (getOutgoing().length > 0)
 					for (Place out : getOutgoing())
 						context.pushToken(out.getId());
 			}
-			
+
 		}
 
 	}
 
-	@Override
-	public int getId() {
-		return id;
-	}
 
 }

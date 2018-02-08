@@ -3,10 +3,10 @@
  */
 package org.sankhya.workflow.core.execution.petrinet;
 
-import org.sankhya.workflow.core.definition.Place;
-import org.sankhya.workflow.core.definition.Transition;
 import org.sankhya.workflow.core.engine.petrinet.EndPlace;
-import org.sankhya.workflow.core.engine.petrinet.Network;
+import org.sankhya.workflow.core.petrinet.Network;
+import org.sankhya.workflow.core.petrinet.Place;
+import org.sankhya.workflow.core.petrinet.Transition;
 
 /**
  * @author Raj Singh Sisodia
@@ -31,7 +31,7 @@ public class Executor {
 			Place place = network.getPlace(ts.peek());
 			if(place instanceof EndPlace)
 				break;
-			for(Transition transition : place.getOutgoingTransitions()){
+			for(Transition transition : place.getOutgoing()){
 				if(transition.isTrigger(executionContext))
 					transition.trigger(executionContext);
 			}

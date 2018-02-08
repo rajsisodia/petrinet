@@ -1,8 +1,9 @@
 /**
  * 
  */
-package org.sankhya.workflow.core.definition;
+package org.sankhya.workflow.core.petrinet;
 
+import org.sankhya.workflow.core.definition.Node;
 import org.sankhya.workflow.core.execution.petrinet.ExecutionContext;
 
 /**
@@ -20,12 +21,7 @@ import org.sankhya.workflow.core.execution.petrinet.ExecutionContext;
  * @since Apr 10, 2017
  *
  */
-public interface Transition {
-	
-	/**
-	 * @return the ID associated with this place.
-	 */
-	int getId();
+public interface Transition extends Node<Place>{
 
 	/**
 	 * Triggers the Transition and consumes tokens from the in-bound
@@ -41,15 +37,4 @@ public interface Transition {
 	 */
 	boolean isTrigger(ExecutionContext context);
 	
-	/**
-	 * Sets the {@link Place places} which are connected to this transition through in-bound arc.
-	 * @param places Places to set.
-	 */
-	void setIncomingPlaces(Place[] places);
-	
-	/**
-	 * Sets the {@link Place places} which are connected to this transition through out-bound arc.
-	 * @param places Places to set.
-	 */
-	void setOutgoingPlaces(Place[] places);
 }

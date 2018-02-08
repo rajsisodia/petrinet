@@ -5,12 +5,15 @@ package org.sankhya.workflow.core.engine.freeChoice;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.sankhya.workflow.core.IllegalStateException;
-import org.sankhya.workflow.core.definition.Place;
-import org.sankhya.workflow.core.definition.Transition;
-import org.sankhya.workflow.core.engine.petrinet.Network;
+import org.sankhya.workflow.core.definition.Node;
+import org.sankhya.workflow.core.petrinet.Network;
+import org.sankhya.workflow.core.petrinet.Place;
+import org.sankhya.workflow.core.petrinet.Transition;
 
 /**
  * A free choice network is modeled as a bipartite graph, consisting of
@@ -80,18 +83,15 @@ public class FreeChoiceNetwork implements Network {
 	@Override
 	public Place getPlace(int placeId) throws IllegalStateException {
 		if (placeId > places.length)
-			throw new IllegalStateException(
-					"Place with id[" + placeId + "] does not exist.");
+			throw new IllegalStateException("Place with id[" + placeId + "] does not exist.");
 
 		return places[placeId];
 	}
 
 	@Override
-	public Transition getTransition(int transitionId)
-			throws IllegalStateException {
+	public Transition getTransition(int transitionId) throws IllegalStateException {
 		if (transitionId > transitions.length)
-			throw new IllegalStateException(
-					"Transition with id[" + transitionId + "] does not exist.");
+			throw new IllegalStateException("Transition with id[" + transitionId + "] does not exist.");
 
 		return transitions[transitionId];
 	}
@@ -121,7 +121,31 @@ public class FreeChoiceNetwork implements Network {
 	public int getPlaceCount() {
 		return places.length;
 	}
-	
+
+	public static class Builder extends BaseNetworkBuilder {
+
+		@Override
+		public Network build(String name, String version) {
+
+			FreeChoiceNetwork network = new FreeChoiceNetwork();
+
+			network.name = name;
+			network.version = version;
+			network.places = getPlaces().values().stream()
+						.sorted(Comparator.comparing(Node::getId))
+						.toArray(Place[]::new);
+			
+			network.transitions = getTransitions().values().stream()
+					.sorted(Comparator.comparing(Node::getId))
+					.toArray(Transition[]::new);
+			
+			network.transitionMatrix = getTransitionMatrix();
+
+			return network;
+		}
+
+	}
+
 	/**
 	 * Privileged Builder class to create an instance of the Network and set the
 	 * necessary parameters.
@@ -130,7 +154,7 @@ public class FreeChoiceNetwork implements Network {
 	 * @since Apr 21, 2017
 	 *
 	 */
-	public static class Builder {
+	public static class IBuilder {
 		/*
 		 * This is an m x n (m rows, n columns) matrix, where m is the number of
 		 * transitions and n is the number of places in the network.
@@ -156,7 +180,7 @@ public class FreeChoiceNetwork implements Network {
 		 * in the array would denote its UID. To ensure the UID does not change
 		 * on reloads, it needs to be provided in the definition file itself.
 		 */
-		private Place[] places = new Place[]{};
+		private Place[] places = new Place[] {};
 
 		/*
 		 * An array of all the transitions in the network. The position of the
@@ -164,8 +188,8 @@ public class FreeChoiceNetwork implements Network {
 		 * not change on reloads, it needs to be provided in the definition file
 		 * itself.
 		 */
-		private Transition[] transitions= new Transition[]{};
-		
+		private Transition[] transitions = new Transition[] {};
+
 		private boolean arcBuildingStarted = false;
 
 		public Network build(String name, String version) {
@@ -176,13 +200,13 @@ public class FreeChoiceNetwork implements Network {
 			network.version = version;
 			network.places = places;
 			network.transitions = transitions;
-			
+
 			network.transitionMatrix = subtract(transitionOutputs, transitionInputs);
-			
-			for(int i=0;i<transitionInputs.length;i++){
+
+			for (int i = 0; i < transitionInputs.length; i++) {
 				List<Place> incomingPlaces = new ArrayList<>();
-				for(int j=0;j<transitionInputs[0].length;j++){
-					if(transitionInputs[i][j] == 1){
+				for (int j = 0; j < transitionInputs[0].length; j++) {
+					if (transitionInputs[i][j] == 1) {
 						incomingPlaces.add(places[j]);
 						places[j].addTransition(transitions[i]);
 					}
@@ -190,50 +214,45 @@ public class FreeChoiceNetwork implements Network {
 				transitions[i].setIncomingPlaces(incomingPlaces.toArray(new Place[] {}));
 			}
 
-			for(int i=0;i<transitionOutputs.length;i++){
+			for (int i = 0; i < transitionOutputs.length; i++) {
 				List<Place> ougoingPlaces = new ArrayList<>();
-				for(int j=0;j<transitionOutputs[0].length;j++){
-					if(transitionOutputs[i][j] == 1)
+				for (int j = 0; j < transitionOutputs[0].length; j++) {
+					if (transitionOutputs[i][j] == 1)
 						ougoingPlaces.add(places[j]);
 				}
 				transitions[i].setOutgoingPlaces(ougoingPlaces.toArray(new Place[] {}));
 			}
-			
+
 			return network;
 		}
 
 		public void addPlace(Place place, int id) throws IllegalStateException {
 
 			if (arcBuildingStarted)
-				throw new IllegalStateException(
-						"Cannot add more places, connection building started.");
+				throw new IllegalStateException("Cannot add more places, connection building started.");
 
 			if (id < places.length) {
 				if (places[id] != null)
-					throw new IllegalStateException(
-							"Place with id[" + id + "] already set.");
+					throw new IllegalStateException("Place with id[" + id + "] already set.");
 				else
 					places[id] = place;
 			} else {
-				places = expandArraySize(Place.class, places, id+1);
+				places = expandArraySize(Place.class, places, id + 1);
 				places[id] = place;
 			}
 		}
 
-		public void addTransition(Transition transition, int id)
-				throws IllegalStateException {
+		public void addTransition(Transition transition, int id) throws IllegalStateException {
 			if (arcBuildingStarted)
-				throw new IllegalStateException(
-						"Cannot add more transitions, connection building started.");
+				throw new IllegalStateException("Cannot add more transitions, connection building started.");
 
 			if (id < transitions.length) {
 				if (transitions[id] != null)
-					throw new IllegalStateException(
-							"Transition with id[" + id + "] already set.");
+					throw new IllegalStateException("Transition with id[" + id + "] already set.");
 				else
 					transitions[id] = transition;
 			} else {
-				transitions = expandArraySize(Transition.class, transitions, id +1);
+				transitions = expandArraySize(Transition.class, transitions, id + 1);
 				transitions[id] = transition;
 			}
 		}
@@ -253,21 +272,21 @@ public class FreeChoiceNetwork implements Network {
 		 */
 		public void addConnection(int transitionId, int placeId, boolean incoming) {
 			arcBuildingStarted = true;
-			
-			if(transitionInputs == null)
+
+			if (transitionInputs == null)
 				transitionInputs = new int[transitions.length][places.length];
-			if(transitionOutputs == null)
+			if (transitionOutputs == null)
 				transitionOutputs = new int[transitions.length][places.length];
-			
-			if(incoming)
+
+			if (incoming)
 				transitionInputs[transitionId][placeId] = 1;
 			else
 				transitionOutputs[transitionId][placeId] = 1;
-			
+
 		}
 
 		@SuppressWarnings("unchecked")
-		private <T> T[] expandArraySize(Class<?>clazz, T[] orignal, int newSize) {
+		private <T> T[] expandArraySize(Class<?> clazz, T[] orignal, int newSize) {
 			T[] newArray = (T[]) Array.newInstance(clazz, newSize);
 
 			for (int i = 0; i < orignal.length; i++) {
@@ -291,6 +310,5 @@ public class FreeChoiceNetwork implements Network {
 		}
 
 	}
-
 
 }
