@@ -1,12 +1,12 @@
 /**
  * 
  */
-package org.sankhya.workflow.core.engine.petrinet;
+package org.sankhya.workflow.core.petrinet.engine;
 
 import org.sankhya.workflow.core.engine.AbstractNode;
-import org.sankhya.workflow.core.execution.petrinet.ExecutionContext;
 import org.sankhya.workflow.core.petrinet.Place;
 import org.sankhya.workflow.core.petrinet.Transition;
+import org.sankhya.workflow.core.petrinet.execution.ExecutionContext;
 
 /**
  * @author Raj Singh Sisodia

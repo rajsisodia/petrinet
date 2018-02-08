@@ -10,15 +10,15 @@ import java.util.Arrays;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork;
-import org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork.Builder;
-import org.sankhya.workflow.core.engine.petrinet.BoundPlace;
-import org.sankhya.workflow.core.engine.petrinet.EndPlace;
-import org.sankhya.workflow.core.engine.petrinet.ParallelSplit;
-import org.sankhya.workflow.core.engine.petrinet.SyncronizedJoin;
+import org.sankhya.workflow.core.execution.petrinet.LoggingTransition;
 import org.sankhya.workflow.core.petrinet.Network;
 import org.sankhya.workflow.core.petrinet.Place;
-import org.sankhya.workflow.core.engine.petrinet.LoggingTransition;
+import org.sankhya.workflow.core.petrinet.engine.BoundPlace;
+import org.sankhya.workflow.core.petrinet.engine.EndPlace;
+import org.sankhya.workflow.core.petrinet.engine.ParallelSplit;
+import org.sankhya.workflow.core.petrinet.engine.SyncronizedJoin;
+import org.sankhya.workflow.core.petrinet.engine.freechoice.FreeChoiceNetwork;
+import org.sankhya.workflow.core.petrinet.engine.freechoice.FreeChoiceNetwork.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,31 +65,30 @@ public class FreeChoiceNetworkTest {
 	public static Network buildNetWorkOne() {
 		Builder builder = new Builder();
 		
-		Place start = new BoundPlace(0);
+		Place start = new BoundPlace("P0");
 		
-		builder.addPlace(start, 0);
-		builder.addPlace(new BoundPlace(1), 1);
-		builder.addPlace(new BoundPlace(2), 2);
-		builder.addPlace(new EndPlace(3), 3);
+		builder.add(start);
+		builder.add(new BoundPlace("P1"));
+		builder.add(new BoundPlace("P2"));
+		builder.add(new EndPlace("P3"));
 		
-		builder.addTransition(new LoggingTransition(0), 0);
-		builder.addTransition(new LoggingTransition(1), 1);
-		builder.addTransition(new LoggingTransition(2), 2);
-		builder.addTransition(new LoggingTransition(3), 3);
-		builder.addTransition(new LoggingTransition(4), 4);
+		builder.add(new LoggingTransition("T0"));
+		builder.add(new LoggingTransition("T1"));
+		builder.add(new LoggingTransition("T2"));
+		builder.add(new LoggingTransition("T3"));
+		builder.add(new LoggingTransition("T4"));
 		
-		builder.addConnection(0, 0, true);
-		builder.addConnection(1, 0, true);
-		builder.addConnection(2, 1, true);
-		builder.addConnection(3, 1, true);
-		builder.addConnection(4, 2, true);
+		builder.connect("P0", "T0");
+		builder.connect("P0", "T1");
+		builder.connect("T0", "P1");
+		builder.connect("P1", "T2");
+		builder.connect("P1", "T3");
+		builder.connect("T1", "P2");
+		builder.connect("P2", "T4");
+		builder.connect("T2", "P3");
+		builder.connect("T3", "P3");
+		builder.connect("T4", "P3");
 		
-		builder.addConnection(0, 1, false);
-		builder.addConnection(1, 2, false);
-		builder.addConnection(2, 3, false);
-		builder.addConnection(3, 3, false);
-		builder.addConnection(4, 3, false);
-
 		return builder.build("Simple", "1.0");
 	}
 	
@@ -138,57 +137,56 @@ public class FreeChoiceNetworkTest {
 	public static Network buildConcurrentNetWork() {
 		Builder builder = new Builder();
 		
-		Place start = new BoundPlace(0);
+		Place start = new BoundPlace("P0");
 		
-		builder.addPlace(start, 0);
-		builder.addPlace(new BoundPlace(1), 1);
-		builder.addPlace(new BoundPlace(2), 2);
-		builder.addPlace(new BoundPlace(3), 3);
-		builder.addPlace(new BoundPlace(4), 4);
-		builder.addPlace(new BoundPlace(5), 5);
-		builder.addPlace(new BoundPlace(6), 6);
-		builder.addPlace(new BoundPlace(7), 7);
-		builder.addPlace(new BoundPlace(8), 8);
-		builder.addPlace(new BoundPlace(9), 9);
-		builder.addPlace(new BoundPlace(10), 10);
-		builder.addPlace(new EndPlace(11), 11);
+		builder.add(start);
+		builder.add(new BoundPlace("P1"));
+		builder.add(new BoundPlace("P2"));
+		builder.add(new BoundPlace("P3"));
+		builder.add(new BoundPlace("P4"));
+		builder.add(new BoundPlace("P5"));
+		builder.add(new BoundPlace("P6"));
+		builder.add(new BoundPlace("P7"));
+		builder.add(new BoundPlace("P8"));
+		builder.add(new BoundPlace("P9"));
+		builder.add(new BoundPlace("P10"));
+		builder.add(new EndPlace("P11"));
 		
-		builder.addTransition(new ParallelSplit(0), 0);
-		builder.addTransition(new LoggingTransition(1), 1);
-		builder.addTransition(new LoggingTransition(2), 2);
-		builder.addTransition(new ParallelSplit(3), 3);
-		builder.addTransition(new LoggingTransition(4), 4);
-		builder.addTransition(new LoggingTransition(5), 5);
-		builder.addTransition(new LoggingTransition(6), 6);
-		builder.addTransition(new SyncronizedJoin(7), 7);
-		builder.addTransition(new LoggingTransition(8), 8);
-		builder.addTransition(new LoggingTransition(9), 9);
+		builder.add(new ParallelSplit("T0"));
+		builder.add(new LoggingTransition("T1"));
+		builder.add(new LoggingTransition("T2"));
+		builder.add(new ParallelSplit("T3"));
+		builder.add(new LoggingTransition("T4"));
+		builder.add(new LoggingTransition("T5"));
+		builder.add(new LoggingTransition("T6"));
+		builder.add(new SyncronizedJoin("T7"));
+		builder.add(new LoggingTransition("T8"));
+		builder.add(new LoggingTransition("T9"));
 		
-		builder.addConnection(0, 0, true);
-		builder.addConnection(1, 1, true);
-		builder.addConnection(2, 2, true);
-		builder.addConnection(3, 3, true);
-		builder.addConnection(4, 5, true);
-		builder.addConnection(5, 6, true);
-		builder.addConnection(6, 4, true);
-		builder.addConnection(7, 8, true);
-		builder.addConnection(7, 10, true);
-		builder.addConnection(8, 9, true);
-		builder.addConnection(9, 7, true);
-
+		builder.connect("P0", "T0");
+		builder.connect("T0", "P1");
+		builder.connect("T0", "P2");
+		builder.connect("P1", "T1");
+		builder.connect("P2", "T2");
+		builder.connect("T1", "P3");
+		builder.connect("T2", "P4");
+		builder.connect("P3", "T3");
+		builder.connect("P4", "T6");
+		builder.connect("T3", "P5");
+		builder.connect("T3", "P6");
+		builder.connect("P5", "T4");
+		builder.connect("P6", "T5");
+		builder.connect("T4", "P8");
+		builder.connect("T5", "P9");
+		builder.connect("P8", "T7");
+		builder.connect("P9", "T8");
+		builder.connect("T8", "P10");
+		builder.connect("P10", "T7");
+		builder.connect("T7", "P7");
+		builder.connect("T6", "P7");
+		builder.connect("P7", "T9");
+		builder.connect("T9", "P11");
 		
-		builder.addConnection(0, 1, false);
-		builder.addConnection(0, 2, false);
-		builder.addConnection(1, 3, false);
-		builder.addConnection(2, 4, false);
-		builder.addConnection(3, 5, false);
-		builder.addConnection(3, 6, false);
-		builder.addConnection(4, 8, false);
-		builder.addConnection(5, 9, false);
-		builder.addConnection(6, 7, false);
-		builder.addConnection(7, 7, false);
-		builder.addConnection(8, 10, false);
-		builder.addConnection(9, 11, false);
 
 		return builder.build("Concurrent", "1.0");
 	}
@@ -202,7 +200,7 @@ public class FreeChoiceNetworkTest {
 
 	/**
 	 * Test method for
-	 * {@link org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork#getName()}.
+	 * {@link org.sankhya.workflow.core.petrinet.engine.freechoice.FreeChoiceNetwork#getName()}.
 	 */
 	@Test
 	public void testGetName() {
@@ -211,7 +209,7 @@ public class FreeChoiceNetworkTest {
 
 	/**
 	 * Test method for
-	 * {@link org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork#getVersion()}.
+	 * {@link org.sankhya.workflow.core.petrinet.engine.freechoice.FreeChoiceNetwork#getVersion()}.
 	 */
 	@Test
 	public void testGetVersion() {
@@ -220,7 +218,7 @@ public class FreeChoiceNetworkTest {
 
 	/**
 	 * Test method for
-	 * {@link org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork#getPlace(int)}.
+	 * {@link org.sankhya.workflow.core.petrinet.engine.freechoice.FreeChoiceNetwork#getPlace(int)}.
 	 */
 	@Test
 	public void testGetPlace() {
@@ -229,7 +227,7 @@ public class FreeChoiceNetworkTest {
 
 	/**
 	 * Test method for
-	 * {@link org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork#getTransition(int)}.
+	 * {@link org.sankhya.workflow.core.petrinet.engine.freechoice.FreeChoiceNetwork#getTransition(int)}.
 	 */
 	@Test
 	public void testGetTransition() {
@@ -238,7 +236,7 @@ public class FreeChoiceNetworkTest {
 
 	/**
 	 * Test method for
-	 * {@link org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork#getTransitionMatrix()}.
+	 * {@link org.sankhya.workflow.core.petrinet.engine.freechoice.FreeChoiceNetwork#getTransitionMatrix()}.
 	 */
 	@Test
 	public void testGetTransitionMatrix() {
@@ -247,7 +245,7 @@ public class FreeChoiceNetworkTest {
 
 	/**
 	 * Test method for
-	 * {@link org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork#getOutgoingTransitions(int)}.
+	 * {@link org.sankhya.workflow.core.petrinet.engine.freechoice.FreeChoiceNetwork#getOutgoingTransitions(int)}.
 	 */
 	@Test
 	public void testGetOutgoingTransitions() {
@@ -256,7 +254,7 @@ public class FreeChoiceNetworkTest {
 
 	/**
 	 * Test method for
-	 * {@link org.sankhya.workflow.core.engine.freeChoice.FreeChoiceNetwork#getAllTransitions()}.
+	 * {@link org.sankhya.workflow.core.petrinet.engine.freechoice.FreeChoiceNetwork#getAllTransitions()}.
 	 */
 	@Test
 	public void testGetAllTransitions() {

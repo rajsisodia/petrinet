@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.sankhya.workflow.core.engine.petrinet;
+package org.sankhya.workflow.core.petrinet.engine;
 
 import org.sankhya.workflow.core.engine.AbstractNode;
 import org.sankhya.workflow.core.petrinet.Place;

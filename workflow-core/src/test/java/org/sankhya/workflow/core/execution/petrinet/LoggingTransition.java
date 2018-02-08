@@ -1,10 +1,11 @@
 /**
  * 
  */
-package org.sankhya.workflow.core.engine.petrinet;
+package org.sankhya.workflow.core.execution.petrinet;
 
-import org.sankhya.workflow.core.execution.petrinet.ExecutionContext;
 import org.sankhya.workflow.core.petrinet.Place;
+import org.sankhya.workflow.core.petrinet.engine.AbstractTransition;
+import org.sankhya.workflow.core.petrinet.execution.ExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

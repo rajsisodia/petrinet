@@ -3,7 +3,7 @@
  */
 package org.sankhya.workflow.core.definition;
 
-import org.sankhya.workflow.core.execution.petrinet.ExecutionContext;
+import org.sankhya.workflow.core.petrinet.execution.ExecutionContext;
 
 /**
  * @author Raj Singh Sisodia

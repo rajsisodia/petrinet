@@ -12,7 +12,8 @@ import org.sankhya.workflow.core.definition.Node;
  */
 public interface NetworkBuilder {
 	
-	NetworkBuilder add(String name, Node<?> node);
+	NetworkBuilder add(Node<?> node);
+	NetworkBuilder connect(String name, String to);
 	NetworkBuilder connect(Node<?> from, Node<?> to);
 	Network build(String name, String version);
 

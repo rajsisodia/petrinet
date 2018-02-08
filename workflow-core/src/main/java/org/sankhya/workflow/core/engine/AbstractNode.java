@@ -14,7 +14,7 @@ import org.sankhya.workflow.core.definition.Node;
  */
 public class AbstractNode<N extends Node<?>> implements Node<N> {
 	
-	private int id;
+	private int id = -1;
 	private String name;
 
 	private N[] incoming;

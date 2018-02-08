@@ -4,7 +4,7 @@
 package org.sankhya.workflow.core.petrinet;
 
 import org.sankhya.workflow.core.definition.Node;
-import org.sankhya.workflow.core.execution.petrinet.ExecutionContext;
+import org.sankhya.workflow.core.petrinet.execution.ExecutionContext;
 
 /**
  * A transition changes the state of execution of the graph, in other words,
