@@ -93,10 +93,16 @@ public class CompressedRowTokenStore implements TokenStore {
 		return value;
 	}
 
+	
+	/*
+	 * TODO: this should keep rotating without throwing outofbounds exception.
+	 */
 	@Override
 	public int peek() {
 		if(!this.hasNext())
 			throw new IllegalStateException("Cannot provide token from an empty place.");
+		if (peekCounter < 0)
+			return peekCounter;
 		int location = this.placeIDs[peekCounter];
 		int value = this.tokens[peekCounter];
 		if (value < 1)

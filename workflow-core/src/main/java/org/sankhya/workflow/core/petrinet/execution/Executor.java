@@ -28,7 +28,10 @@ public class Executor {
 		TokenStore ts = executionContext.getTokenStore();
 		
 		while(ts.hasNext()){
-			Place place = network.getPlace(ts.peek());
+			int val = ts.peek();
+			if(val <0 )
+				continue;
+			Place place = network.getPlace(val);
 			if(place instanceof EndPlace)
 				break;
 			for(Transition transition : place.getOutgoing()){
@@ -39,6 +42,5 @@ public class Executor {
 		
 		
 	}
-
 	
 }
