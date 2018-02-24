@@ -17,5 +17,7 @@ public interface ExecutionContext {
 	int exists(int placeId);
 	
 	TokenStore getTokenStore();
+	
+	void syncronize();
 
 }

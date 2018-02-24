@@ -3,7 +3,6 @@
  */
 package org.sankhya.workflow.core.petrinet.engine;
 
-import java.util.Arrays;
 import java.util.concurrent.ForkJoinPool;
 
 import org.sankhya.workflow.core.petrinet.Place;
@@ -16,25 +15,31 @@ import org.sankhya.workflow.core.petrinet.execution.ExecutionContext;
  *
  */
 public class AsyncTransition extends AbstractTransition {
-	
+
 	private final Transition transition;
-	
+
 	public AsyncTransition(String name, Transition transition) {
 		super(name);
 		this.transition = transition;
 	}
 
 	@Override
+	public boolean preTrigger(ExecutionContext context) {
+		return transition.preTrigger(context);
+	}
+
+	@Override
 	public void trigger(ExecutionContext context) {
 		ForkJoinPool commonPool = ForkJoinPool.commonPool();
-		commonPool.execute(() ->{
-				transition.trigger(context);
+		commonPool.execute(() -> {
+			transition.trigger(context);
 		});
 	}
 
 	@Override
-	public boolean isTrigger(ExecutionContext context) {
-		return transition.isTrigger(context);
+	public void postTrigger(ExecutionContext context) {
+		transition.postTrigger(context);
+
 	}
 
 	@Override
@@ -43,31 +48,28 @@ public class AsyncTransition extends AbstractTransition {
 		transition.setId(id);
 	}
 
-
 	@Override
 	public void setOutgoing(Place[] outgoing) {
 		super.setOutgoing(outgoing);
 		transition.setOutgoing(outgoing);
 	}
 
-
 	@Override
 	public void setIncoming(Place[] incoming) {
 		super.setIncoming(incoming);
 		transition.setIncoming(incoming);
 	}
-	
+
 	@Override
-	public void setOutgoing(Place outgoing){
+	public void setOutgoing(Place outgoing) {
 		super.setOutgoing(outgoing);
-		((AbstractTransition)transition).setOutgoing(outgoing);
+		((AbstractTransition) transition).setOutgoing(outgoing);
 	}
-	
+
 	@Override
-	public void setIncoming(Place incoming){
+	public void setIncoming(Place incoming) {
 		super.setIncoming(incoming);
-		((AbstractTransition)transition).setIncoming(incoming);
+		((AbstractTransition) transition).setIncoming(incoming);
 	}
-	
 
 }

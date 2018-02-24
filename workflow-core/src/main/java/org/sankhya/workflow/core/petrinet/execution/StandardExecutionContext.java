@@ -1,8 +1,13 @@
 package org.sankhya.workflow.core.petrinet.execution;
 
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 public class StandardExecutionContext implements ExecutionContext {
 
 	private TokenStore tokenStore;
+	private Queue<Integer> pushData = new LinkedBlockingQueue();
+	
 	
 	public StandardExecutionContext(TokenStore tokenStore) {
 		this.tokenStore = tokenStore;
@@ -10,7 +15,7 @@ public class StandardExecutionContext implements ExecutionContext {
 	
 	@Override
 	public void pushToken(int placeId) {
-		tokenStore.push(placeId);
+		pushData.add(placeId);
 
 	}
 
@@ -27,6 +32,13 @@ public class StandardExecutionContext implements ExecutionContext {
 	@Override
 	public TokenStore getTokenStore() {
 		return tokenStore;
+	}
+
+	@Override
+	public void syncronize() {
+		while(!pushData.isEmpty()) {
+			tokenStore.push(pushData.poll());	
+		}
 	}
 
 }

@@ -26,18 +26,21 @@ public class Executor {
 	public void execute(ExecutionContext executionContext){
 		
 		TokenStore ts = executionContext.getTokenStore();
-		
+		executionContext.syncronize();
 		while(ts.hasNext()){
 			int val = ts.peek();
 			if(val <0 )
 				continue;
+			
+			
 			Place place = network.getPlace(val);
 			if(place instanceof EndPlace)
 				break;
 			for(Transition transition : place.getOutgoing()){
-				if(transition.isTrigger(executionContext))
+				if(transition.preTrigger(executionContext))
 					transition.trigger(executionContext);
 			}
+			executionContext.syncronize();
 		}
 		
 		

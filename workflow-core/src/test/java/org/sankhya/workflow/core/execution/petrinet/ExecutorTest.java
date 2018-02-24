@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ExecutorTest {
-	
+
 	private final Logger logger = LoggerFactory.getLogger(ExecutorTest.class);
 
 	private Executor executor;
@@ -31,7 +31,8 @@ public class ExecutorTest {
 	@Test
 	public void testExecute() {
 		ExecutionContext executionContext = new StandardExecutionContext(new CompressedRowTokenStore(3));
-		executionContext.pushToken(0);
+		for (int i = 0; i < 1000; i++)
+			executionContext.pushToken(0);
 		executor.execute(executionContext);
 	}
 

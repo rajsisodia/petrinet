@@ -21,20 +21,38 @@ import org.sankhya.workflow.core.petrinet.execution.ExecutionContext;
  * @since Apr 10, 2017
  *
  */
-public interface Transition extends Node<Place>{
+public interface Transition extends Node<Place> {
 
 	/**
-	 * Triggers the Transition and consumes tokens from the in-bound
-	 * {@link Place places} and modify the state of execution. The resulting
-	 * {@link Token tokens}, if any, would be places into out-bound places.
+	 * Responsible to perform actions needed to successful transition trigger, like
+	 * fetching the tokens from relevant places before triggering the Transition.
+	 * 
+	 * @param context
+	 *            ExecutionContext under which the Transition needs to be triggered.
+	 *           
+	 * @return boolean <b>true</b> if successfully configured the trigger environment, otherwise <b>false</b>.
+	 */
+	boolean preTrigger(ExecutionContext context);
+
+	/**
+	 * Triggers the Transition and consumes tokens from the in-bound {@link Place
+	 * places} and modify the state of execution. The resulting {@link Token
+	 * tokens}, if any, would be places into out-bound places.
+	 * 
+	 * @param context
+	 *            ExecutionContext under which the Transition needs to be triggered.
 	 * 
 	 */
 	void trigger(ExecutionContext context);
 
 	/**
-	 * Checks if the precondition to trigger the Transition are satisfied or not.
-	 * @return <code>true</code> if the Transition can be triggered, otherwise <code>false</code>.
+	 * Responsible to perform actions needed after successful triggering of the
+	 * transition, like pushing tokens to relevant places after the trigger is
+	 * complete.
+	 * 
+	 * @param context
+	 *            ExecutionContext under which the Transition needs to be triggered.
 	 */
-	boolean isTrigger(ExecutionContext context);
-	
+	void postTrigger(ExecutionContext context);
+
 }

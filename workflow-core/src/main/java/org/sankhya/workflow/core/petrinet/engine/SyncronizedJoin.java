@@ -14,33 +14,43 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class SyncronizedJoin extends AbstractTransition {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(SyncronizedJoin.class);
 
 	public SyncronizedJoin(String name) {
 		super(name);
 	}
 
+	/**
+	 * In a Join all incoming {@link Place Places} are expected to have a token
+	 * before the {@link Transaction} can be triggered. This method is non thread
+	 * safe and makes changes to the Places holding tokens so it is expected to be
+	 * executed in the same thread as the
+	 * {@link org.sankhya.workflow.core.petrinet.execution.Executor Executor}.
+	 */
 	@Override
-	public boolean isTrigger(ExecutionContext context) {
+	public boolean preTrigger(ExecutionContext context) {
 		boolean shouldTrigger = true;
+
 		for (Place in : getIncoming()) {
 			shouldTrigger = shouldTrigger && (context.exists(in.getId()) != -1);
 		}
-		return shouldTrigger;
+
+		if (!shouldTrigger)
+			return false;
+
+		for (Place in : getIncoming()) {
+			context.popToken(in.getId());
+		}
+
+		return true;
 	}
 
 	@Override
 	public void trigger(ExecutionContext context) {
-		for (Place in : getIncoming()) {
-			
-			if (context.exists(in.getId()) == -1)
-				return;
-			context.popToken(in.getId());
-		}
 		logger.trace("Joining tokens at Transition {}.", getId());
-		context.pushToken(getOutgoing()[0].getId());
+		this.postTrigger(context);
 	}
-
+	
 
 }

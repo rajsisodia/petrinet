@@ -3,7 +3,6 @@
  */
 package org.sankhya.workflow.core.execution.petrinet;
 
-import org.sankhya.workflow.core.petrinet.Place;
 import org.sankhya.workflow.core.petrinet.engine.AbstractTransition;
 import org.sankhya.workflow.core.petrinet.execution.ExecutionContext;
 import org.slf4j.Logger;
@@ -29,18 +28,8 @@ public class LoggingTransition extends AbstractTransition {
 	 */
 	@Override
 	public void trigger(ExecutionContext context) {
-		for (Place in : getIncoming()) {
-			if (context.exists(in.getId()) != -1) {
-				context.popToken(in.getId());
-				logger.debug("Logging from Transition {}.", getId());
-				if (getOutgoing().length > 0)
-					for (Place out : getOutgoing())
-						context.pushToken(out.getId());
-			}
-
-		}
-
+		logger.debug("Logging from Transition {}.", getId());
+		this.postTrigger(context);
 	}
-
 
 }
